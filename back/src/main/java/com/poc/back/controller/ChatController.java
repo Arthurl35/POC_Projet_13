@@ -13,4 +13,11 @@ public class ChatController {
     public ChatMessage sendMessage(ChatMessage message) {
         return message;  
     }
+
+    @MessageMapping("/chat.join")
+    @SendTo("/topic/public")
+    public ChatMessage join(ChatMessage message) {
+        message.setType(ChatMessage.MessageType.JOIN);
+        return message; 
+    }
 }
