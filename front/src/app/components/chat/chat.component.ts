@@ -41,6 +41,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  joinChat(): void {
+    if (this.userName.trim()) {
+      this.webSocketService.connect(this.userName);
+    }
+  }
+
   sendMessage(): void {
     if (this.messageContent.trim()) {
       const message: ChatMessage = {
@@ -55,11 +61,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   @HostListener('window:beforeunload')
   beforeUnloadHandler(): void {
-    this.webSocketService.disconnect(this.userName);  
+    this.webSocketService.disconnect(this.userName);
   }
 
   ngOnDestroy(): void {
-    this.webSocketService.disconnect(this.userName);
+    this.webSocketService.disconnect(this.userName);  
   }
 
   isJoinMessage(message: ChatMessage): boolean {
