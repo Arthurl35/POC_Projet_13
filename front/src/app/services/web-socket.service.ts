@@ -30,6 +30,12 @@ export class WebSocketService {
         this.stompClient?.subscribe('/topic/public', (messageOutput: Stomp.Message) => {
           this.subject.next(JSON.parse(messageOutput.body) as ChatMessage);
         });
+
+        // Envoyer un message indiquant que l'utilisateur a rejoint
+        const joinMessage: ChatMessage = { sender: userName, content: '', type: 'JOIN' };
+        if (this.stompClient) {
+          this.stompClient.send('/app/chat.join', {}, JSON.stringify(joinMessage));
+        }
       }
     );
   }
