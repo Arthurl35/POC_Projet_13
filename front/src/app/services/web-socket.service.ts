@@ -1,5 +1,3 @@
-web socket.service.ts
-
 import { Injectable } from '@angular/core';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
