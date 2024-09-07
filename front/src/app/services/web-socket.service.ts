@@ -45,4 +45,21 @@ export class WebSocketService {
       this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message));
     }
   }
+
+  getMessages(): Observable<ChatMessage> {
+    return this.subject.asObservable();
+  }
+
+  disconnect(userName: string): void {
+    if (this.stompClient !== null) {
+      // Envoyer un message de type LEAVE avant de se déconnecter
+      const leaveMessage: ChatMessage = { sender: userName, content: '', type: 'LEAVE' };
+      this.stompClient.send('/app/chat.leave', {}, JSON.stringify(leaveMessage));
+
+      // Ensuite, déconnecter WebSocket
+      this.stompClient.disconnect(() => {
+        console.log('Disconnected');
+      });
+    }
+  }
 }
