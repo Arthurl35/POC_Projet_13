@@ -11,7 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 interface ChatMessage {
   content: string;
   sender: string;
-  type: 'CHAT';
+  type: 'CHAT' | 'JOIN' | 'LEAVE';
 }
 
 @Component({
@@ -28,7 +28,7 @@ interface ChatMessage {
   ],
   templateUrl: './chat.component.html',
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   userName: string = '';
   messageContent: string = '';
   messages: ChatMessage[] = [];
@@ -51,6 +51,23 @@ export class ChatComponent implements OnInit {
       this.webSocketService.sendMessage(message);
       this.messageContent = ''; 
     }
+  }
+
+  @HostListener('window:beforeunload')
+  beforeUnloadHandler(): void {
+    this.webSocketService.disconnect(this.userName);  
+  }
+
+  ngOnDestroy(): void {
+    this.webSocketService.disconnect(this.userName);
+  }
+
+  isJoinMessage(message: ChatMessage): boolean {
+    return message.type === 'JOIN';
+  }
+
+  isLeaveMessage(message: ChatMessage): boolean {
+    return message.type === 'LEAVE';
   }
 
   isChatMessage(message: ChatMessage): boolean {
